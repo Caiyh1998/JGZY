@@ -1,6 +1,8 @@
 <template>
     <div id="list">
-      <div v-for="(item, index) in listData" :key="index" class="item">
+      <div v-for="(item, index) in listData" :key="index" class="item"
+      @click="routerPush(item)">
+        <!--      @click="(item.info === '积分转赠') && showModal()">-->
         <span class="icon">
           <svg :fill="item.iconColor"><use :xlink:href="item.icon"></use></svg>
         </span>
@@ -18,6 +20,15 @@
         default: function () {
           return []
         }
+      }
+    },
+    methods: {
+      routerPush(item) {
+        if(item.info === '积分转赠') this.showModal()
+        else if (item.info === '账户管理') this.$router.push('/editinfo')
+      },
+      showModal() {
+        this.$bus.$emit('showModal')
       }
     }
 	}

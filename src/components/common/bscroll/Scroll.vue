@@ -1,8 +1,6 @@
 <template>
-  <div class="wrapper" ref="wrapper">
-    <div class="content">
-      <slot></slot>
-    </div>
+  <div ref="wrapper">
+    <slot></slot>
   </div>
 </template>
 
@@ -10,7 +8,23 @@
   import BScroll from 'better-scroll'
 
   export default {
-    name: "BScroll",
+    name: "Scroll",
+    props: {
+      probeType: {
+        type: Number,
+        default: 0
+      },
+      data: {
+        type: Array,
+        default: () => {
+          return []
+        }
+      },
+      pullUpLoad: {
+        type: Boolean,
+        default: false
+      }
+    },
 
     data() {
       return {
@@ -18,10 +32,52 @@
       }
     },
     mounted() {
-      this.scroll = new BScroll(this.$refs.wrapper, {
+      setTimeout(this.__initScroll, 20)
+    },
+    activated() {
+      this.refresh()
+    },
+    methods: {
+      __initScroll(){
+        //1.初始化BScroll对象
+        if (!this.$refs.wrapper) return
+        this.scroll = new BScroll(this.$refs.wrapper, {
+          probeType: this.probeType,
+          click: true,
+          pullUpLoad: this.pullUpLoad,
+          mouseWheel: true
+        })
 
-      });
-    }
+        // 2.将监听事件回调
+        if (this.probeType === 2 || this.probeType === 3) {
+          this.scroll.on('scroll', pos => {
+            this.$emit('scroll', pos)
+          })
+        }
+        // 3.监听上拉到底部
+        if (this.pullUpLoad) {
+          this.scroll.on('pullingUp', () => {
+            console.log('上拉加载');
+            this.$emit('pullingUp')
+          })
+        }
+      },
+      refresh() {
+        // console.log("scroll刷新");
+        this.scroll && this.scroll.refresh && this.scroll.refresh()
+      },
+      finishPullUp() {
+        this.scroll && this.scroll.finishPullUp && this.scroll.finishPullUp()
+      },
+      scrollTo(x, y, time = 300) {
+        this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x, y, time)
+      }
+    },
+    // watch: {
+    //   data() {
+    //     setTimeout(this.refresh, 20)
+    //   }
+    // }
   }
 </script>
 

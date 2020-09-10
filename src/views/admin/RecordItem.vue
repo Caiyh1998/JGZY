@@ -6,16 +6,16 @@
 
     <div class="record-info">
       <p v-if="record.Type==='积分转出'">
-        向 {{record.To}} 赠送了 {{record.Sum}} 积分
+        {{record.From}} 向 {{record.To}} 赠送了 {{record.Sum}} 积分
       </p>
       <p v-else-if="record.Type==='积分转入'">
-        收到 {{record.To}} 赠送的 {{record.Sum}} 积分
+        {{record.From}} 收到 {{record.To}} 赠送的 {{record.Sum}} 积分
       </p>
       <p v-else-if="record.Type==='积分兑换'">
-        兑换了 {{record.To}} * {{record.Amount}} ,花费 {{record.Sum}} 积分
+        {{record.From}} 兑换了 {{record.To}} * {{record.Amount}} ,花费 {{record.Sum}} 积分
       </p>
       <p v-else-if="record.Type==='报名参赛'">
-        报名 {{record.To}} 比赛,报名费 {{record.Sum}} 积分
+        {{record.From}} 报名 {{record.To}} 比赛,报名费 {{record.Sum}} 积分
       </p>
       <p v-else>
         未知错误

@@ -3,7 +3,6 @@
       <nav-bar class="game-nav-bar"><div slot="item-center">坚果赛事</div></nav-bar>
 
       <game-tab-bar class="game-tab-bar"/>
-
     </div>
 </template>
 

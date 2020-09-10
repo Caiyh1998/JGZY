@@ -1,14 +1,14 @@
 <template>
   <div id="user-info">
-    <a href="#" class="clear-fix">
+    <a class="clear-fix">
       <slot name="user-icon">
         <svg class="privateImage-svg left">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#avatar-default"></use>
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#avatar-default"></use>
         </svg>
       </slot>
       <div class="login-info left">
         <slot name="user-nickname">
-          <div>登录/注册</div>
+          <div @click="toLogin">登录/注册</div>
         </slot>
         <div class="phone">
           <span>
@@ -24,15 +24,20 @@
 
 <script>
 	export default {
-		name: "UserInfo"
+		name: "UserInfo",
+    methods: {
+      toLogin() {
+        this.$router.push('/login')
+      }
+    }
 	}
 </script>
 
 <style scoped>
   #user-info {
-    background-color: var(--color-tint);
+    background-color: #1298DB;
     padding: 15px;
-    margin-top: -5px;
+    /*margin-top: -5px;*/
   }
 
   #user-info .privateImage-svg {

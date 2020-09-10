@@ -1,48 +1,60 @@
 <template>
-  <scroll id="tab-menu">
+<!--  <scroll id="tab-menu">-->
     <div class="menu-list">
       <div class="menu-list-item"
-           :class="{active: index===currentIndex}"
+           :class="{active: active===item}"
            v-for="(item, index) in categories"
            :key="index"
-           @click="itemClick(index)">
-        {{item.title}}
+           @click="itemClick(index,item)">
+        {{item}}
       </div>
     </div>
-  </scroll>
+<!--  </scroll>-->
 </template>
 
 <script>
-  import Scroll from 'common/scroll/Scroll'
+  // import Scroll from 'common/scroll/Scroll'
 
 	export default {
 		name: "TabMenu",
     components: {
-		  Scroll
+		  // Scroll
     },
     props: {
-		  categories: Array
+		  categories: {
+		    type: Array,
+        default() {
+          return ['饮品','其他']
+        }
+      },
+      active: {
+		    type: String,
+        default() {
+          return '饮品'
+        }
+      }
     },
     data() {
 		  return {
-		    currentIndex: 0
+		    isActive: '饮品'
       }
     },
     methods: {
-		  itemClick(index) {
-        this.currentIndex = index
-        this.$emit('selectItem', index)
-      }
+		  itemClick(index,item) {
+        // this.isActive = this.categories[index]
+        this.$bus.$emit('selectItem', index,item)
+      },
     }
 	}
 </script>
 
 <style scoped>
-  #tab-menu {
+  .menu-list {
     background-color: #f6f6f6;
     height: 100%;
     width: 100px;
     box-sizing: border-box;
+    float: left;
   }
 
   .menu-list-item {

@@ -1,22 +1,34 @@
 <template>
   <div id="app">
-    <router-view/>
+    <keep-alive>
+      <router-view/>
+    </keep-alive>
     <main-tab-bar/>
+    <icon/>
+    <svg-icon/>
   </div>
 </template>
 
 <script>
-  import MainTabBar from "./components/MainTabBar";
+  import MainTabBar from "components/content/MainTabBar";
+  import Icon from "components/content/Icon/Icon";
+  import SvgIcon from "components/content/Icon/Svg";
 
   export default {
     name: "App",
     components: {
-      MainTabBar
+      MainTabBar,
+      Icon,
+      SvgIcon
     }
   }
 </script>
 
 <style>
-  @import "./assets/css/base.css";
+  @import "assets/css/base.css";
+
+  #app {
+    position: relative;
+  }
 
 </style>
