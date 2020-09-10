@@ -6,7 +6,8 @@ import cookie from '../common/cookie';
 export function request(config) {
   const instance = axios.create({
     // baseURL: 'http://152.136.185.210:8000/api/z8',
-    baseURL: 'http://127.0.0.1:7001/api',
+    baseURL: 'http://45.77.214.95:7001/api',
+    // 45.77.214.95
     timeout: 5000,
   })
 
