@@ -23,6 +23,7 @@
       <p>备注信息： {{record.Remarks}}</p>
       <p class="red">剩余积分： {{record.Balance}}</p>
       <p>订单状态： {{record.Status}}</p>
+      <button v-if="record.Status === '待办'" @click="updateRecordStatus(record.RecordID)">完成</button>
 
     </div>
 
@@ -31,6 +32,8 @@
 </template>
 
 <script>
+  import {updateRecordStatus} from "network/handle"
+
   export default {
     name: "RecordItem",
     props: {
@@ -41,6 +44,19 @@
         }
       }
     },
+    methods: {
+      updateRecordStatus(rid) {
+       if(confirm('确认完成？')){
+         updateRecordStatus(rid).then(res => {
+           if(res.success){
+             this.record.Status = '完成'
+           }
+           else
+             alert('修改状态失败')
+         })
+       }
+      }
+    }
   }
 </script>
 
@@ -70,6 +86,11 @@
     width: 100%;
     position: relative;
     font-size: 14px;
+  }
+  .record-info button{
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
   }
 
   .red {

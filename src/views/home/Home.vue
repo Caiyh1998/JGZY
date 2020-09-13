@@ -1,7 +1,9 @@
 <template>
   <div id="home">
 
-    <nav-bar class="home-nav-bar"><div slot="item-center">坚果桌游</div></nav-bar>
+    <nav-bar class="home-nav-bar">
+      <div slot="item-center">坚果桌游</div>
+    </nav-bar>
     <tab-control v-show="isTabFixed" class="home-tab-control fixed" @tabClick="tabClick"
                  :titles="['剧本杀','飞行棋','卡牌类']" ref="tabControl1"/>
     <scroll class="content"
@@ -11,17 +13,20 @@
             @scroll="contentScroll"
             @pullingUp="loadMore">
       <div>
-      <main-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" ref="hSwiper"/>
-        <top-list :top3="top3"><div slot="top-list-title">Top榜</div></top-list>
-      <main-category>
-        <div slot="main-category-title" @click="goGame">坚果赛事，报名入口</div>
-<!--        <div slot="main-category-view" @click="goGame">坚果赛事，报名入口</div>-->
-      </main-category>
-      <tab-control class="home-tab-control"
-                   :titles="['剧本杀','飞行棋','卡牌类']"
-                   @tabClick="tabClick"
-                   ref="tabControl2"/>
-      <goods-list :goodsList="showGoods"/>
+        <main-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" ref="hSwiper"/>
+        <top-list :top3="top3">
+          <div slot="top-list-title">Top榜</div>
+        </top-list>
+        <div class="category-view" @click="goGame">
+          <img class="category-img" src="http://localhost:7001/public/JGZY_DATA/HOME_IMG/GameSignUp.jpeg">
+        </div>
+        <!--        <div slot="main-category-view" @click="goGame">坚果赛事，报名入口</div>-->
+        <tab-control class="home-tab-control"
+                     :titles="['剧本杀','飞行棋','卡牌类']"
+                     @tabClick="tabClick"
+                     ref="tabControl2"/>
+        <goods-list :goodsList="showGoods"/>
+        <!--        <prevent-blocking/>-->
       </div>
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop"/>
@@ -37,6 +42,7 @@
   import GoodsList from "components/common/goodslist/GoodsList";
   import Scroll from "components/common/bscroll/Scroll";
   import BackTop from "components/common/backtop/BackTop";
+  import PreventBlocking from "components/common/preventblocking/PreventBlocking"
 
   import {getHomeMultidata, getHomeGoods} from "network/home";
   import {debounce} from "common/utils"
@@ -51,6 +57,7 @@
       MainCategory,
       TabControl,
       GoodsList,
+      PreventBlocking,
       Scroll,
       BackTop
     },
@@ -83,7 +90,7 @@
     },
     mounted() {
       const refresh = debounce(this.$refs.scroll.refresh, 50)
-      this.$bus.$on('itemImageLoad',() => {
+      this.$bus.$on('itemImageLoad', () => {
         refresh()
       })
     },
@@ -105,27 +112,30 @@
       tabClick(index) {
         switch (index) {
           case 0:
-            this.currentType = '饮品';break
+            this.currentType = '饮品';
+            break
           case 1:
-            this.currentType = 'new';break
+            this.currentType = 'new';
+            break
           case 2:
-            this.currentType = 'sell';break
+            this.currentType = 'sell';
+            break
         }
         this.$refs.tabControl1.currentIndex = index
         this.$refs.tabControl2.currentIndex = index
 
-        this.$refs.scroll.scrollTo(0, this.goodsListPosition[this.currentType],-1)
+        this.$refs.scroll.scrollTo(0, this.goodsListPosition[this.currentType], -1)
       },
       backClick() {
-        this.$refs.scroll.scrollTo(0,0,500)
+        this.$refs.scroll.scrollTo(0, 0, 500)
       },
       contentScroll(position) {
         this.isShowBackTop = (-position.y) > 1000
 
         this.isTabFixed = (-position.y) > this.tabOffsetTop - 46
 
-        if(-position.y > 520)
-        this.goodsListPosition[this.currentType] = position.y
+        if (-position.y > 520)
+          this.goodsListPosition[this.currentType] = position.y
       },
       loadMore() {
         this.getHomeGoods(this.currentType)
@@ -137,7 +147,6 @@
 
       getHomeMultidata() {
         getHomeMultidata().then(res => {
-          console.log(res);
           this.banners = res.data.data.banner.list;
           this.top3 = res.data.data.top3.list;
         })
@@ -145,7 +154,6 @@
       getHomeGoods(type) {
         const page = this.goods[type].page + 1;
         getHomeGoods(type, page).then(res => {
-          console.log(res);
           this.goods[type].list.push(...res.data.data.list);
           this.goods[type].page++;
 
@@ -173,6 +181,16 @@
     right: 0;
     top: 0;
     z-index: 9;
+  }
+
+  .category-view {
+    padding: 0;
+    border-top: 2px solid #333333;
+    border-bottom: 2px solid #333333;
+  }
+
+  .category-img {
+    width: 100%;
   }
 
   .home-tab-control {

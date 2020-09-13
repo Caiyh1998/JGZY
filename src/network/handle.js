@@ -73,10 +73,18 @@ export function updateIntegral(form) {
     data: form
   }).then(res => {
     res = res.data
-    // if (res.success) {
-      // store.commit("setToken", res.token)
-      // store.commit("setUserInfo", res.data.userinfo)
-    // }
+    return res
+  })
+}
+
+export function updateRecordStatus(rid) {
+  return request({
+    url: '/handle/updateRecordStatus',
+    params: {
+      rid
+    }
+  }).then(res => {
+    res = res.data
     return res
   })
 }

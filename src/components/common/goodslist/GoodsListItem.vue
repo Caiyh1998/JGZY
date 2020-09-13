@@ -76,3 +76,4 @@
     /*background: url("~assets/img/common/collect.svg") 0 0/14px 14px;*/
   }
 </style>
+

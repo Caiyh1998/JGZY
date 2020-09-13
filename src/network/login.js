@@ -31,3 +31,18 @@ export function userRegister(form) {
     return res
   })
 }
+
+export function adminLogin(form) {
+  return request({
+    url: '/login/admin',
+    method: 'post',
+    data: form
+  }).then(res => {
+    res = res.data
+    if (res.code == 0) {
+      store.commit("setToken", res.token)
+      store.commit("setUserInfo", res.data)
+    }
+    return res
+  })
+}

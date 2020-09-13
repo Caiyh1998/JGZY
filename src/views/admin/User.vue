@@ -41,6 +41,8 @@
       </div>
     </div>
 
+    <pagination :totalPage="0" :isEnd="false" v-on:loadMore="loadMore"/>
+
     <div class="modal" v-if="isShow">
       <div class="modal-view">
         <div>正在对{{TEMP_ITEM.UserName}}进行操作</div>
@@ -69,12 +71,16 @@
 </template>
 
 <script>
+  import Pagination from "components/common/pagination/Pagination"
+
   import {getUserData, searchUser} from "network/admin"
   import {updateIntegral} from "network/handle"
-  import {update} from "../../network/handle";
 
   export default {
     name: "User",
+    components: {
+      Pagination
+    },
     data() {
       return {
         search: '',
@@ -83,7 +89,8 @@
         TEMP_ITEM: {},
         method: 'add',
         variation: 0,
-        remarks: ''
+        remarks: '',
+        pageNum: 1
       }
     },
     computed: {
@@ -97,9 +104,9 @@
     activated() {
       this.isShow = false
       if (this.search === '')
-        this.getUserData(1)
+        this.getUserData(this.pageNum)
       else
-        this.searchUser(1)
+        this.searchUser(this.pageNum)
     },
     methods: {
       updateIntegral() {
@@ -131,13 +138,22 @@
       },
       getUserData(page) {
         getUserData(page).then(res => {
-          this.userList = res.data.userList
+          this.userList.push(...res.data.userList)
+          this.pageNum++
         })
       },
       searchUser(page) {
         searchUser(this.search, page).then(res => {
-          this.userList = res.data.userList
+          this.userList.push(...res.data.userList)
+          this.pageNum++
         })
+      },
+      loadMore() {
+        if (this.search === '') {
+          this.getUserData(this.pageNum)
+        } else {
+          this.searchUser(this.pageNum)
+        }
       }
     }
   }

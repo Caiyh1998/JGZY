@@ -5,45 +5,67 @@
       <button @click="searchRecord(1)"><img src="~assets/img/common/search.svg"></button>
     </div>
     <record-item v-for="item in records" :record="item"/>
+    <pagination :totalPage="0" :isEnd="false" v-on:loadMore="loadMore"/>
   </div>
 </template>
 
 <script>
   import RecordItem from "./RecordItem";
+  import Pagination from "components/common/pagination/Pagination"
 
   import {getRecordData, searchRecord} from "network/admin"
 
   export default {
     name: "Record",
     components: {
-      RecordItem
+      RecordItem,
+      Pagination
     },
     data() {
       return {
         search: '',
         records: [],
+        pageNum: 1,
+        NotIsSearch: true
       }
     },
-    activated() {
-      if (this.search === '')
-        this.getRecordData(1)
-      else
-        this.searchRecord(1)
+    created() {
+        this.getRecordData(this.pageNum)
     },
     methods: {
       searchRecord(page) {
+        if(this.NotIsSearch){
+          this.NotIsSearch = false
+          this.pageNum = 1
+          this.records = []
+        }
+        if(this.search === ''){
+          this.NotIsSearch = true
+          this.pageNum = 1
+          this.records = []
+        }
+        console.log(page);
         searchRecord(this.search, page).then(res => {
           console.log(res);
-          this.records = res.data
+          this.records.push(...res.data)
+          this.pageNum++
         })
 
       },
       getRecordData(page) {
         getRecordData('all', page).then(res => {
           console.log(res);
-          this.records = res.data.list
+          this.records.push(...res.data.list)
+          this.pageNum++
         })
       },
+      loadMore() {
+        if (this.search === '') {
+          this.getRecordData(this.pageNum)
+        } else {
+          this.searchRecord(this.pageNum)
+        }
+      }
     }
   }
 </script>

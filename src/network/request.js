@@ -1,13 +1,11 @@
 import axios from 'axios'
 import router from "../router";
 import store from "../store";
-import cookie from '../common/cookie';
 
 export function request(config) {
   const instance = axios.create({
-    // baseURL: 'http://152.136.185.210:8000/api/z8',
-    baseURL: 'http://45.77.214.95:7001/api',
-    // 45.77.214.95
+    baseURL: 'http://47.93.49.16:7001/api',
+    // baseURL: 'http://localhost:7001/api',
     timeout: 5000,
   })
 
@@ -31,7 +29,7 @@ export function request(config) {
     if (err.response) {
       switch (err.response.status) {
         case 401:
-          store.commit("delToken");
+          // store.commit("delToken");
           router.replace({
             path: '/login',
             query: { redirect: router.currentRoute.fullPath }//登录成功后跳入浏览的当前页面

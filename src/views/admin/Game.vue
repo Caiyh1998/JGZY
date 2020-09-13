@@ -36,32 +36,38 @@
       </div>
     </div>
 
-       <div class="game-tr game-item" v-for="item in games">
-         <div class="game-td">
-           {{item.GameTitle}}
-         </div>
-         <div class="game-td">
-           {{item.GamePrice}}
-         </div>
-         <div class="game-td">
-           {{item.GameQuota}}/{{item.PlayerCNT}}
-         </div>
-         <div class="game-td">
-           {{item.GameDate}}
-         </div>
-         <div class="game-td">
-           <button>结算</button>
-         </div>
-       </div>
+    <div class="game-tr game-item" v-for="item in games">
+      <div class="game-td">
+        {{item.GameTitle}}
+      </div>
+      <div class="game-td">
+        {{item.GamePrice}}
+      </div>
+      <div class="game-td">
+        {{item.GameQuota}}/{{item.PlayerCNT}}
+      </div>
+      <div class="game-td">
+        {{item.GameDate}}
+      </div>
+      <div class="game-td">
+        <button>结算</button>
+      </div>
+    </div>
+    <pagination :totalPage="0" :isEnd="false" v-on:loadMore="loadMore"/>
 
   </div>
 </template>
 
 <script>
-  import {getGameData,createGame} from "network/game"
+  import Pagination from "components/common/pagination/Pagination"
+
+  import {getGameData, createGame} from "network/game"
 
   export default {
     name: "Game",
+    components: {
+      Pagination
+    },
     data() {
       return {
         games: [],
@@ -70,12 +76,13 @@
           title: '',
           quota: 6,
           date: new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() + ' ',
-          price: 100
-        }
+          price: 100,
+        },
+        pageNum: 1
       }
     },
     created() {
-      this.getGameData()
+      this.getGameData(this.pageNum)
     },
     methods: {
       clearAll() {
@@ -84,10 +91,12 @@
       showModal() {
         this.isShow = true
       },
-      getGameData() {
-        getGameData().then(res => {
+      getGameData(page) {
+        console.log(page);
+        getGameData(page).then(res => {
           console.log(res);
-          this.games = res.data.game.list
+          this.games.push(...res.data.game.list)
+          this.pageNum++
         })
       },
       createGame() {
@@ -97,6 +106,14 @@
           this.clearAll()
           this.getGameData()
         })
+      },
+      loadMore() {
+        this.getGameData(this.pageNum)
+        // if (this.search === '') {
+        //   this.getGameData(this.pageNum)
+        // } else {
+        //   this.searchUser(this.pageNum)
+        // }
       }
     }
   }

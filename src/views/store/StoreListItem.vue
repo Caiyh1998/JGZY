@@ -42,7 +42,7 @@
       imgsrc: {
         type: String,
         default() {
-          return "http://localhost:7001/public/JGZY_DATA/STORE_IMG/";
+          return "http://47.93.49.16:7001/public/JGZY_DATA/STORE_IMG/";
         }
       },
     },

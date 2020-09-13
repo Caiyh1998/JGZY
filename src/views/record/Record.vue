@@ -11,6 +11,7 @@
 
       </div>
       <record-item v-for="item in records" :record="item"/>
+      <pagination :totalPage="0" :isEnd="false" v-on:loadMore="loadMore"/>
     </div>
   </div>
 </template>
@@ -18,44 +19,56 @@
 <script>
   import NavBar from "components/common/navbar/NavBar";
   import RecordItem from "./RecordItem";
+  import Pagination from "components/common/pagination/Pagination"
 
-  import {getRecordData,searchRecord} from "network/record";
+  import {getRecordData, searchRecord} from "network/record";
 
   export default {
     name: "Record",
     components: {
       NavBar,
-      RecordItem
+      RecordItem,
+      Pagination
     },
     data() {
       return {
         records: [],
         search: '',
+        pageNum: 1
       }
     },
     // created() {
     //   this.getRecordData()
     // },
     activated() {
-      if(this.search === '')
-        this.getRecordData()
+      if (this.search === '')
+        this.getRecordData(this.pageNum)
       else
-        this.searchRecord()
+        this.searchRecord(this.pageNum)
     },
     methods: {
-      searchRecord() {
-        searchRecord(this.search, 1).then(res => {
+      searchRecord(page) {
+        searchRecord(this.search, page).then(res => {
           console.log(res);
-          this.records = res.data
+          this.records.push(...res.data)
+          this.pageNum++
         })
 
       },
-      getRecordData() {
-        getRecordData('all', 1).then(res => {
+      getRecordData(page) {
+        getRecordData('all', page).then(res => {
           console.log(res);
-          this.records = res.data.list
+          this.records.push(...res.data.list)
+          this.pageNum++
         })
       },
+      loadMore() {
+        if (this.search === '')
+          this.getRecordData(this.pageNum)
+        else
+          this.searchRecord(this.pageNum)
+      }
+
     }
   }
 </script>
@@ -101,6 +114,7 @@
     padding: 0;
     display: flex;
   }
+
   .search input {
     line-height: 40px;
     height: 44px;
@@ -111,6 +125,7 @@
   .search button {
     padding: 0;
   }
+
   .search img {
     height: 40px;
     padding: 0;

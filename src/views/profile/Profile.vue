@@ -122,8 +122,6 @@
           return this.$store.getters.getUserInfo
       }
     },
-    activated() {
-    },
     mounted() {
       this.$bus.$on('showModal',() => {
         this.showModal()

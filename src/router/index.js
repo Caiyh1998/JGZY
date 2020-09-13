@@ -79,6 +79,7 @@ const routes = [
   {
     path: '/admin/index',
     component: Admin,
+    meta:{requiresAuth:true}
   },
   {
     path: '/admin/login',
@@ -87,14 +88,17 @@ const routes = [
   {
     path: '/admin/game',
     component: AdminGame,
+    meta:{requiresAuth:true}
   },
   {
     path: '/admin/record',
     component: AdminRecord,
+    meta:{requiresAuth:true}
   },
   {
     path: '/admin/user',
     component: AdminUser,
+    meta:{requiresAuth:true}
   },
 ]
 
@@ -117,6 +121,11 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(r => r.meta.requiresAuth)) {
     if (store.state.token) {
       next();
+    } else if (to.fullPath.indexOf('/admin') != -1){
+      console.log(to.fullPath);
+      next({
+        path: '/admin/login'
+      });
     } else {
       next({
         path: '/login'
